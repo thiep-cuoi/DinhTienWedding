@@ -1,0 +1,71 @@
+import type {Side,WeddingConfig} from "./wedding";
+
+// Thiệp NHÀ GÁI — đầu cầu TP. Hồ Chí Minh.
+const brideCard: WeddingConfig = {
+  side: "nha-gai",
+  groom: "Công Định",
+  bride: "Thủy Tiên",
+  groomFull: "Võ Công Định",
+  brideFull: "Nguyễn Ngọc Thủy Tiên",
+  groomFather: "Võ Công Vinh",
+  groomMother: "Trần Thị Minh Tần",
+  groomHome: "Phường Hồng Bàng, TP. Hải Phòng",
+  brideFather: "Nguyễn Hữu Duệ",
+  brideMother: "Nguyễn Thị Kim Trâm",
+  brideHome: "Phường An Nhơn, TP. Hồ Chí Minh",
+  ceremonyTitle: "Lễ vu quy",
+  date: "2026-12-20",
+  ceremonyTime: "09:00",
+  lunarDate: "12 tháng 11 năm Bính Ngọ",
+  ceremonyVenue: "Tư gia nhà gái",
+  ceremonyHall: "",
+  ceremonyAddress: "Phường An Nhơn, TP. Hồ Chí Minh",
+  ceremonyNote: "",
+  receptionTitle: "Tiệc chung vui",
+  receptionDate: "2026-12-20",
+  receptionTime: "11:00",
+  receptionLunar: "12 tháng 11 năm Bính Ngọ",
+  receptionVenue: "Trung tâm hội nghị – Yến tiệc THE ADORA ATHENA",
+  receptionHall: "Sảnh CRYSTAL – Tầng trệt",
+  receptionAddress: "Số 371 Nguyễn Kiệm, Phường Hạnh Thông, TP. Hồ Chí Minh",
+  receptionNote: "Đón khách 11h00 · Khai tiệc 12h00",
+  city: "TP. Hồ Chí Minh",
+  intro: "Trân trọng báo tin lễ vu quy của con chúng tôi.",
+};
+
+// Thiệp NHÀ TRAI — đầu cầu Hải Phòng (giữ nguyên nội dung V4).
+const groomCard: WeddingConfig = {
+  side: "nha-trai",
+  groom: "Công Định",
+  bride: "Thủy Tiên",
+  groomFull: "Võ Công Định",
+  brideFull: "Nguyễn Ngọc Thủy Tiên",
+  groomFather: "Võ Công Vinh",
+  groomMother: "Trần Thị Minh Tần",
+  groomHome: "",
+  brideFather: "Nguyễn Hữu Duệ",
+  brideMother: "Nguyễn Thị Kim Trâm",
+  brideHome: "",
+  ceremonyTitle: "Lễ thành hôn",
+  date: "2026-12-26",
+  ceremonyTime: "09:30",
+  lunarDate: "18 tháng 11 năm Bính Ngọ",
+  ceremonyVenue: "Tư gia nhà trai",
+  ceremonyHall: "",
+  ceremonyAddress: "Paris 19–26, KĐT Vinhomes Imperia, phường Hồng Bàng, TP. Hải Phòng",
+  ceremonyNote: "",
+  receptionTitle: "Tiệc mừng hạnh phúc",
+  receptionDate: "2026-12-26",
+  receptionTime: "11:30",
+  receptionLunar: "18 tháng 11 năm Bính Ngọ",
+  receptionVenue: "Cung Sapphire · Hải Đăng Plaza",
+  receptionHall: "",
+  receptionAddress: "Tòa nhà Kim Cương, số 19–35 Trần Khánh Dư, Hải Phòng",
+  receptionNote: "",
+  city: "Hải Phòng",
+  intro: "Sau những ngày cùng nhau đi qua, chúng mình chọn đi tiếp một hành trình — hành trình có nhau. Sự hiện diện của bạn sẽ làm ngày vui ấy trọn vẹn hơn.",
+};
+
+// Hai đầu cầu, theo thứ tự hiện trên màn mở thiệp. Sau khi kết nối Google Sheets có thể sửa trong trang quản lý.
+export const defaultWeddings: Record<Side,WeddingConfig> = {"nha-gai": brideCard, "nha-trai": groomCard};
+export const defaultWedding = groomCard;
