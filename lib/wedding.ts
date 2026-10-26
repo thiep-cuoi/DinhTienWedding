@@ -21,8 +21,11 @@ export const bridgeLabel = (config: WeddingConfig) => config.bridgeName?.trim() 
 // Gộp nội dung đã lưu (Google Sheets) vào mặc định theo từng trường, để trường mới thêm sau vẫn có giá trị.
 export const mergeConfigs = (saved?: Partial<Record<Side,Partial<WeddingConfig>>>): WeddingSites => ({"nha-gai": {...defaultWeddings["nha-gai"], ...saved?.["nha-gai"]}, "nha-trai": {...defaultWeddings["nha-trai"], ...saved?.["nha-trai"]}});
 
-export type Invitation = { id: string; token: string; guestName: string; salutation: string; groupName: string; maxGuests: number; note: string; enabled: number; createdAt: string; openedAt: string | null; attendance?: string | null; guests?: number | null; wish?: string | null; respondedAt?: string | null; side?: Side | null; };
+export type Invitation = { id: string; token: string; guestName: string; salutation: string; salutationAfter?: number | boolean; groupName: string; maxGuests: number; note: string; enabled: number; createdAt: string; openedAt: string | null; attendance?: string | null; guests?: number | null; wish?: string | null; respondedAt?: string | null; side?: Side | null; };
 export type RSVP = { id: string; inviteId: string | null; guestName: string; attendance: "yes" | "no" | "later"; guests: number; event: "ceremony" | "reception" | "both"; wish: string; groupName: string; side?: Side | null; createdAt: string; updatedAt: string; };
+// Tên trên thiệp: xưng hô đứng trước tên ("Anh Minh") hoặc sau tên khi tuỳ chỉnh ("Lân bro").
+export const guestTitle = (salutation: string, name: string, after?: number | boolean | null) => [after ? name : salutation, after ? salutation : name].filter(Boolean).join(" ");
+export const salutationText = (salutation: string, after?: number | boolean | null) => after ? `${salutation} (sau tên)` : salutation;
 export const attendanceLabels: Record<string,string> = { yes: "Sẽ tham dự", no: "Không tham dự", later: "Chưa xác nhận" };
 export const eventLabels: Record<string,string> = { ceremony: "Lễ", reception: "Tiệc", both: "Cả hai chương trình" };
 // Nhãn chương trình theo đúng đầu cầu khách đã chọn, ví dụ "Đầu cầu Hải Phòng · Tiệc mừng hạnh phúc".

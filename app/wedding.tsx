@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useEffect, useState, useRef, type FormEvent } from "react";
 import { ArrowDown, ArrowRight, CalendarDays, Check, Heart, MapPin, Menu, Send, Share2, X, Wine, LoaderCircle, Mail, CheckCircle2, Clock3, Expand, Repeat } from "lucide-react";
-import { defaultWeddings, mergeConfigs, sides, bridgeLabel, weddingDate, weddingEvents, mainEvent, hasReception, couple, prettyDate, dayName, type Side, type WeddingSites } from "../lib/wedding";
+import { defaultWeddings, mergeConfigs, guestTitle, sides, bridgeLabel, weddingDate, weddingEvents, mainEvent, hasReception, couple, prettyDate, dayName, type Side, type WeddingSites } from "../lib/wedding";
 import { createCalendar } from "../lib/calendar";
 import { useModal } from "../lib/use-modal";
 import {assetUrl,homeHref,weddingFetch} from "../lib/browser-config";
@@ -9,7 +9,7 @@ import {defaultGuestLabel,readNamedGuest,responseStorageKey,type NamedGuest} fro
 import {WeddingMusicPlayer} from "../lib/music-player";
 import {InvitationOpening,MusicControl} from "./invitation-opening";
 
-type Invite = { guestName:string;salutation:string;maxGuests:number;note:string };
+type Invite = { guestName:string;salutation:string;salutationAfter?:number|boolean;maxGuests:number;note:string };
 type Previous = {attendance:string;guests:number;event:string;wish:string;side?:Side|null};
 type InvitationPayload = {configs:WeddingSites; invitation?:Invite; previous?:Previous|null;error?:string};
 const journey=[{image:"/images/vivid.webp",date:"03.06.2023",title:"Những ngày cùng nhau",text:"Có những khoảnh khắc, chỉ cần được ở cạnh nhau đã là hạnh phúc."},{image:"/images/candlelight.webp",date:"05.08.2023",title:"Những điều giản dị",text:"Gom góp những nụ cười, để mỗi ngày đều thành một kỷ niệm."},{image:"/images/trip.webp",date:"15.06.2024",title:"Cùng nhìn về một phía",text:"Đi đâu cũng được, miễn là chúng mình đi cùng nhau."}];
@@ -73,7 +73,7 @@ export default function WeddingInvitation({token}:{token?:string}) {
   const d=await r.json() as {error?:string};if(!r.ok)throw new Error(d.error??"Chưa gửi được phản hồi.");setSaved(true);setPrevious({attendance,guests,event:hasReception(config)?event:"ceremony",wish,side});
  }catch(e){setError((e as Error).message??"Chưa gửi được phản hồi. Vui lòng thử lại.");}finally{setSubmitting(false);}}
  if(token&&!loading&&loadError)return <main className="missing-invite"><Mail size={42} strokeWidth={1}/><p className="eyebrow">THIỆP MỜI CỦA BẠN</p><h1>Mình hẹn gặp nhau nhé.</h1><p>{loadError}</p><a className="button primary" href={homeHref()}>Xem thiệp cưới chung <ArrowRight size={16}/></a></main>;
- const guestLabel=invite?`${invite.salutation} ${invite.guestName}`:namedGuest?.name||defaultGuestLabel;
+ const guestLabel=invite?guestTitle(invite.salutation,invite.guestName,invite.salutationAfter):namedGuest?.name||defaultGuestLabel;
  if(!opened)return <InvitationOpening configs={configs} guest={guestLabel} onOpen={openInvitation} loading={loading} opening={opening}/>;
  const [first,second]=couple(config),events=weddingEvents(config),main=mainEvent(config),twoEvents=events.length>1,mainDate=prettyDate(main.date).replaceAll("/",".");
  return <div className="wedding-site invitation-reveal">
