@@ -1,4 +1,4 @@
-import {defaultWeddings,type WeddingSites} from "./wedding";
+import {mergeConfigs,type WeddingSites} from "./wedding";
 import {buildRsvpWorkbook} from "./export-rsvp";
 import type {Invitation,RSVP} from "./wedding";
 declare global {interface Window {WEDDING_SITE?:{mode:"static";appsScriptUrl:string;weddings?:Partial<WeddingSites>;musicVolume?:number;musicFadeSeconds?:number};}}
@@ -15,7 +15,7 @@ export function setAdminSession(token:string){if(token)sessionStorage.setItem(se
 export async function weddingFetch(path:string,options:RequestInit={}):Promise<Response>{
  if(!isStaticSite())return fetch(path,options);
  const endpoint=window.WEDDING_SITE?.appsScriptUrl?.trim();
- if(!endpoint){if(path==="/api/config")return Response.json({configs:{...defaultWeddings,...window.WEDDING_SITE?.weddings}});return Response.json({error:"Chưa kết nối Google Sheets. Hãy cấu hình appsScriptUrl trong config.js theo README."},{status:503});}
+ if(!endpoint){if(path==="/api/config")return Response.json({configs:mergeConfigs(window.WEDDING_SITE?.weddings)});return Response.json({error:"Chưa kết nối Google Sheets. Hãy cấu hình appsScriptUrl trong config.js theo README."},{status:503});}
  if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))return Response.json({error:"URL Apps Script chưa đúng. Dùng địa chỉ Web App kết thúc bằng /exec."},{status:503});
  const data=typeof options.body==="string"?JSON.parse(options.body):{};
  const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({path:path.replace(/^\/api\//,""),method:options.method??"GET",data,sessionToken:getAdminSession()}),credentials:"omit",redirect:"follow",signal:AbortSignal.timeout(45000)});
@@ -25,7 +25,7 @@ export async function weddingFetch(path:string,options:RequestInit={}):Promise<R
  if(!packet.ok){if(packet.status===401){setAdminSession("");window.dispatchEvent(new Event("wedding-admin-expired"));}return Response.json({error:packet.error??"Chưa xử lý được yêu cầu."},{status:packet.status??400});}
  if(path==="/api/admin/export"){
   const result=packet.data as {invitations:Invitation[];responses:RSVP[];configs?:WeddingSites};
-  const bytes=buildRsvpWorkbook(result.invitations,result.responses,i=>absoluteInviteUrl(i.token),result.configs??defaultWeddings);
+  const bytes=buildRsvpWorkbook(result.invitations,result.responses,i=>absoluteInviteUrl(i.token),mergeConfigs(result.configs));
   return new Response(new Uint8Array(bytes).buffer,{headers:{"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}});
  }
  return Response.json(packet.data);

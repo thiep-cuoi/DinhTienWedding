@@ -3,6 +3,7 @@ import type {Side,WeddingConfig} from "./wedding";
 // Thiệp NHÀ GÁI — đầu cầu TP. Hồ Chí Minh.
 const brideCard: WeddingConfig = {
   side: "nha-gai",
+  bridgeName: "Đầu cầu TP. Hồ Chí Minh",
   groom: "Công Định",
   bride: "Thủy Tiên",
   groomFull: "Võ Công Định",
@@ -36,6 +37,7 @@ const brideCard: WeddingConfig = {
 // Thiệp NHÀ TRAI — đầu cầu Hải Phòng (giữ nguyên nội dung V4).
 const groomCard: WeddingConfig = {
   side: "nha-trai",
+  bridgeName: "Đầu cầu Hải Phòng",
   groom: "Công Định",
   bride: "Thủy Tiên",
   groomFull: "Võ Công Định",

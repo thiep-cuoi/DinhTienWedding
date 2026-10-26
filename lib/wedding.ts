@@ -2,7 +2,7 @@ import {defaultWedding,defaultWeddings} from "./card";
 export {defaultWedding,defaultWeddings};
 
 export type WeddingConfig = {
-  side: string;
+  side: string; bridgeName: string;
   groom: string; bride: string; groomFull: string; brideFull: string;
   groomFather: string; groomMother: string; groomHome: string; brideFather: string; brideMother: string; brideHome: string;
   ceremonyTitle: string; date: string; ceremonyTime: string; lunarDate: string;
@@ -11,13 +11,15 @@ export type WeddingConfig = {
   receptionVenue: string; receptionHall: string; receptionAddress: string; receptionNote: string;
   city: string; intro: string;
 };
-export const optionalConfigKeys: (keyof WeddingConfig)[] = ["groomFather","groomMother","groomHome","brideFather","brideMother","brideHome","lunarDate","ceremonyHall","ceremonyNote","receptionTitle","receptionDate","receptionTime","receptionLunar","receptionVenue","receptionHall","receptionAddress","receptionNote","city"];
+export const optionalConfigKeys: (keyof WeddingConfig)[] = ["bridgeName","groomFather","groomMother","groomHome","brideFather","brideMother","brideHome","lunarDate","ceremonyHall","ceremonyNote","receptionTitle","receptionDate","receptionTime","receptionLunar","receptionVenue","receptionHall","receptionAddress","receptionNote","city"];
 // Hai đầu cầu: nhà gái (TP. Hồ Chí Minh) và nhà trai (Hải Phòng), theo thứ tự hiện trên màn mở thiệp.
 export type Side = "nha-gai" | "nha-trai";
 export const sides: Side[] = ["nha-gai","nha-trai"];
 export type WeddingSites = Record<Side,WeddingConfig>;
 export const isSide = (value: unknown): value is Side => value === "nha-gai" || value === "nha-trai";
-export const bridgeLabel = (config: WeddingConfig) => `Đầu cầu ${config.city || (config.side === "nha-gai" ? "nhà gái" : "nhà trai")}`;
+export const bridgeLabel = (config: WeddingConfig) => config.bridgeName?.trim() || `Đầu cầu ${config.city || (config.side === "nha-gai" ? "nhà gái" : "nhà trai")}`;
+// Gộp nội dung đã lưu (Google Sheets) vào mặc định theo từng trường, để trường mới thêm sau vẫn có giá trị.
+export const mergeConfigs = (saved?: Partial<Record<Side,Partial<WeddingConfig>>>): WeddingSites => ({"nha-gai": {...defaultWeddings["nha-gai"], ...saved?.["nha-gai"]}, "nha-trai": {...defaultWeddings["nha-trai"], ...saved?.["nha-trai"]}});
 
 export type Invitation = { id: string; token: string; guestName: string; salutation: string; groupName: string; maxGuests: number; note: string; enabled: number; createdAt: string; openedAt: string | null; attendance?: string | null; guests?: number | null; wish?: string | null; respondedAt?: string | null; side?: Side | null; };
 export type RSVP = { id: string; inviteId: string | null; guestName: string; attendance: "yes" | "no" | "later"; guests: number; event: "ceremony" | "reception" | "both"; wish: string; groupName: string; side?: Side | null; createdAt: string; updatedAt: string; };

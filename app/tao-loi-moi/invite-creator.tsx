@@ -2,13 +2,13 @@
 import {useEffect,useState,type FormEvent} from "react";
 import {ArrowLeft,ArrowUpRight,Check,Copy,Heart,Link2,MailPlus} from "lucide-react";
 import {assetUrl,homeHref,managementHref,weddingFetch} from "../../lib/browser-config";
-import {defaultWeddings,sides,couple,mainEvent,prettyDate,type WeddingSites} from "../../lib/wedding";
+import {defaultWeddings,mergeConfigs,sides,couple,mainEvent,prettyDate,type WeddingSites} from "../../lib/wedding";
 import {createNamedInviteUrl,defaultGuestLabel,parseGuestNames} from "../../lib/guest-links";
 
 type CreatedInvite={name:string;url:string};
 export default function InviteCreator(){
  const [configs,setConfigs]=useState<WeddingSites>(defaultWeddings),[names,setNames]=useState(""),[links,setLinks]=useState<CreatedInvite[]>([]),[selected,setSelected]=useState(0),[error,setError]=useState(""),[notice,setNotice]=useState("");
- useEffect(()=>{let active=true;weddingFetch("/api/config").then(async r=>{if(!r.ok)return;const d=await r.json() as {configs?:Partial<WeddingSites>};if(active&&d.configs)setConfigs({...defaultWeddings,...d.configs});}).catch(()=>{});return()=>{active=false;};},[]);
+ useEffect(()=>{let active=true;weddingFetch("/api/config").then(async r=>{if(!r.ok)return;const d=await r.json() as {configs?:Partial<WeddingSites>};if(active&&d.configs)setConfigs(mergeConfigs(d.configs));}).catch(()=>{});return()=>{active=false;};},[]);
  useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(""),4000);return()=>clearTimeout(timer);},[notice]);
  function create(e:FormEvent){
   e.preventDefault();setError("");

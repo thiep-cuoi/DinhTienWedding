@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useEffect, useState, useRef, type FormEvent } from "react";
 import { ArrowDown, ArrowRight, CalendarDays, Check, Heart, MapPin, Menu, Send, Share2, X, Wine, LoaderCircle, Mail, CheckCircle2, Clock3, Expand, Repeat } from "lucide-react";
-import { defaultWeddings, sides, bridgeLabel, weddingDate, weddingEvents, mainEvent, hasReception, couple, prettyDate, dayName, type Side, type WeddingSites } from "../lib/wedding";
+import { defaultWeddings, mergeConfigs, sides, bridgeLabel, weddingDate, weddingEvents, mainEvent, hasReception, couple, prettyDate, dayName, type Side, type WeddingSites } from "../lib/wedding";
 import { createCalendar } from "../lib/calendar";
 import { useModal } from "../lib/use-modal";
 import {assetUrl,homeHref,weddingFetch} from "../lib/browser-config";
@@ -51,7 +51,7 @@ export default function WeddingInvitation({token}:{token?:string}) {
    setNamedGuest(personal);if(personal)setName(personal.name);
    try{const id=personal?.reference||sessionStorage.getItem(key)||crypto.randomUUID();sessionStorage.setItem(key,id);setSubmissionId(id);}catch{setSubmissionId(personal?.reference||crypto.randomUUID());}
    weddingFetch(token?`/api/invitation/${encodeURIComponent(token)}`:"/api/config",{cache:"no-store"}).then(async r=>{const d=await r.json() as InvitationPayload;if(!r.ok)throw new Error(d.error??"Chưa tải được thiệp mời.");return d;}).then(d=>{
-    if(!active)return;setConfigs({...defaultWeddings,...d.configs});
+    if(!active)return;setConfigs(mergeConfigs(d.configs));
     if(d.invitation){setInvite(d.invitation);setName(d.invitation.guestName);if(d.previous)setPrevious(d.previous);weddingFetch("/api/opened",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token})}).catch(()=>{});}
    }).catch(e=>{if(active)setLoadError(e.message??"Chưa tải được thiệp mời.");}).finally(()=>{if(active)setLoading(false);});
    return()=>{active=false;};
